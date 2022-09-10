@@ -1,5 +1,5 @@
 import boom from "@hapi/boom";
-import nodemailer from "nodemailer";
+import nodemailer, {} from "nodemailer";
 import dotenv from "dotenv";
 import { email, emailWithButton } from "../tools/build";
 
