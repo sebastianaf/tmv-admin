@@ -1,0 +1,146 @@
+version: "3.8"
+
+services:
+  tmv-admin-api:
+    container_name: tmv-admin-api
+    image: tmv-admin-api
+    restart: always
+    environment:
+      API_CLIENT: ${API_CLIENT}
+      API_TOKEN: ${API_TOKEN}
+      API_TOKEN_EXPIRATION_TIME: ${API_TOKEN_EXPIRATION_TIME}
+      API_CREATE_ADMIN: ${API_CREATE_ADMIN}
+      API_LOG: ${API_LOG}
+      API_PORT: ${API_PORT}
+      API_SMTP_USER: ${API_SMTP_USER}
+      API_SMTP_PASS: ${API_SMTP_PASS}
+      API_SMTP_HOST: ${API_SMTP_HOST}
+      API_SMTP_PORT: ${API_SMTP_PORT}
+
+      #tmv-admin-db-01
+      DB_USERS_DATABASE: ${DB_USERS_DATABASE}
+      DB_USERS_USER: ${DB_USERS_USER}
+      DB_USERS_PASSWORD: ${DB_USERS_PASSWORD}
+      DB_USERS_HOST: ${DB_USERS_HOST}
+      
+      #tmv-admin-db-02
+      DB_DATA_USER: ${DB_DATA_USER}
+      DB_DATA_PASSWORD: ${DB_DATA_PASSWORD}
+      DB_DATA_DATABASE: ${DB_DATA_DATABASE}
+      DB_DATA_HOST: ${DB_DATA_HOST}
+      
+      TZ: ${DB_DATA_TZ}
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      args:
+        API_PORT: ${API_PORT}
+#    ports:
+#      - ${API_PORT}:${API_PORT}
+    depends_on:
+      - tmv-admin-db-01
+      - tmv-admin-db-02
+    networks:
+      - tmv-admin
+
+  tmv-admin-db-01:
+    container_name: tmv-admin-db-01
+    image: mongo:4.4.15
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERS_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_USERS_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_USERS_DATABASE}
+    volumes:
+      - ./db-01:/data/db
+#    ports:
+#      - ${DB_USERS_PORT}:27017
+    networks:
+      - tmv-admin
+
+  tmv-admin-db-02:
+    container_name: tmv-admin-db-02
+    restart: always
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DB_DATA_USER}
+      POSTGRES_PASSWORD: ${DB_DATA_PASSWORD}
+      POSTGRES_DB: ${DB_DATA_DATABASE}
+      TZ: ${DB_DATA_TZ}
+    volumes:
+      - ./db-02:/var/lib/postgresql/data
+#    ports:
+#      - ${DB_USERS_DATA}:5432
+    networks:
+      - tmv-admin
+
+  tmv-admin-ui:
+    container_name: tmv-admin-ui
+    image: tmv-admin-ui
+    restart: always
+    environment:
+      REACT_APP_UI_PORT: ${REACT_APP_UI_PORT}
+      REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_UI_PORT: ${REACT_APP_UI_PORT}
+        REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+    depends_on:
+      - tmv-admin-api
+#    ports:
+#      - ${REACT_APP_UI_PORT}:${REACT_APP_UI_PORT}
+    networks:
+      - tmv-admin
+
+  tmv-admin-mongoexpress:
+    container_name: tmv-admin-mongoexpress
+    image: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: ${DB_MONGOEXPRESS_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${DB_MONGOEXPRESS_PASSWORD}
+      #tmv-admin-db-02
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USERS_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_USERS_PASSWORD}
+      ME_CONFIG_MONGODB_URL: ${DB_MONGOEXPRESS_URL}
+    depends_on:
+      - tmv-admin-db-01
+#    ports:
+#      - ${DB_MONGOEXPRESS_PORT}:8081
+    networks:
+      - tmv-admin
+
+  tmv-admin-pgadmin:
+    container_name: tmv-admin-pgadmin
+    restart: always
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+    depends_on:
+      - tmv-admin-db-02
+#    ports:
+#      - ${DB_PGADMIN_PORT}:80
+    networks:
+      - tmv-admin
+
+  tmv-admin-duckdns:
+    container_name: tmv-admin-duckdns
+    restart: always
+    image: ghcr.io/linuxserver/duckdns
+    environment:
+      PUID: ${DDNS_PUID}
+      PGID: ${DDNS_PGID}
+      SUBDOMAINS: ${DDNS_SUBDOMAINS}
+      DUCKDNS_TOKEN: ${DDNS_TOKEN}
+      LOG_FILE: ${DDNS_LOGFILE}
+
+      TZ: ${DB_DATA_TZ}
+    networks:
+      - tmv-admin
+
+networks:
+  tmv-admin:
+    name: tmv-admin
