@@ -1,6 +1,8 @@
 import sequelize from "../db/sequelize";
 import bcryptjs from "bcryptjs";
 import RoleService from "./role.service";
+import boom from "@hapi/boom";
+import errorCodes from "../config/errorCodes";
 
 const roleService = new RoleService();
 const { models } = sequelize;
@@ -13,27 +15,43 @@ class UserService {
     return obj;
   }
 
-  async update(id, data) {
+  async findOne(id) {
     const obj = await models.User.findByPk(id);
+    console.log(obj);
+    if (!obj) {
+      throw boom.notFound(
+        errorCodes.DB_NOT_FOUND.name,
+        errorCodes.DB_NOT_FOUND
+      );
+    }
+    return obj;
+  }
+
+  async update(id, data) {
+    const obj = await this.findOne(id);
+
     const salt = await bcryptjs.genSalt(10);
     const encryptedPassword = await bcryptjs.hash(data.password, salt);
     data.password = encryptedPassword;
+
     const res = await obj.update(data);
     return res;
   }
 
   async delete(id) {
-    const obj = await models.User.findByPk(id);
+    const obj = await this.findOne(id);
     await obj.destroy();
-    return { error: null };
-  }
-
-  async findOne(id) {
-    const obj = await models.User.findByPk(id);
-    return obj;
+    return null;
   }
 
   async createfirstUser() {
+    let obj2 = await models.Role.findOne({ where: { name: "admin" } });
+    if (!obj2) {
+      let role = {
+        name: "admin",
+      };
+      roleService.create(role);
+    }
     let firstUser = {
       alias: "admin",
       password: "admin",
@@ -44,16 +62,16 @@ class UserService {
 
     const obj = await models.User.findOne({ where: { alias: "admin" } });
     const salt = await bcryptjs.genSalt(10);
-    const encryptedPassword = await bcryptjs.hash(firstUser.password, salt);
+    const hashedPassword = await bcryptjs.hash(firstUser.password, salt);
     if (obj) {
-      return obj.update({
+      return await obj.update({
         ...firstUser,
-        password: encryptedPassword,
+        password: hashedPassword,
       });
     } else {
-      return this.create({
+      return await models.User.create({
         ...firstUser,
-        password: encryptedPassword,
+        password: hashedPassword,
       });
     }
   }

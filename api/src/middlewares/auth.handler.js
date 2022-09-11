@@ -27,12 +27,12 @@ const authHandler = async (req, res, next) => {
           req.user = user;
           next();
         } else {
-          next(boom.badData(errorCodes.BAD_TOKEN.title, errorCodes.BAD_TOKEN));
+          next(boom.badData(errorCodes.BAD_TOKEN.name, errorCodes.BAD_TOKEN));
         }
       }
     } else {
       next(
-        boom.forbidden(errorCodes.FORBIDDEN.description, errorCodes.FORBIDDEN)
+        boom.forbidden(errorCodes.FORBIDDEN.name, errorCodes.FORBIDDEN)
       );
     }
   } catch (error) {
