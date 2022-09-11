@@ -13,7 +13,7 @@ router.post(
   async (req, res, next) => {
     try {
       const result = await emailService.sendEmail(req.body);
-      res.status(200).json(result);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
     } catch (error) {
       next(error);
     }
