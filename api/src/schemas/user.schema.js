@@ -1,22 +1,21 @@
 import Joi from "joi";
 
-const _id = Joi.number().min(1);
-const name = Joi.string().min(2);
+const _id = Joi.number().integer().min(1);
 const alias = Joi.string().min(2);
 const password = Joi.string().min(2);
-const roleId = Joi.number();
-const userId = Joi.number();
+const roleId = Joi.number().integer().min(1);
+const createdById = Joi.number().integer().min(1);
 
 const postUserSchema = Joi.object({
-  name: name.required(),
   alias: alias.required(),
   password: password.required(),
   roleId: roleId.required(),
-  userId: userId.required(),
+  createdById: createdById.required(),
+  employeeId: _id.required(),
 });
 
 const patchUserSchema = Joi.object({
-  name,
+  employeeId: _id,
   alias,
   password,
   roleId,

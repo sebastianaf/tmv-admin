@@ -1,6 +1,6 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-const REQUEST_TYPE_TABLE = "peopleTypes";
+const REQUEST_TYPE_TABLE = "request_types";
 
 const RequestTypeSchema = {
   id: {
@@ -13,11 +13,16 @@ const RequestTypeSchema = {
   name: {
     allowNull: false,
     type: DataTypes.STRING,
+    unique: true,
   },
 };
 
 class RequestType extends Model {
-  static associate() {}
+  static associate(models) {
+    this.hasMany(models.Request,{
+      foreignKey: "requestTypeId"
+    })
+  }
 
   static config(sequelize) {
     return {
@@ -25,6 +30,7 @@ class RequestType extends Model {
       tableName: REQUEST_TYPE_TABLE,
       modelName: "RequestType",
       timestamps: true,
+      underscored: true,
     };
   }
 }

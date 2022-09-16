@@ -19,6 +19,7 @@ const RoleSchema = {
 class Role extends Model {
   static associate(models) {
     this.hasMany(models.User, {
+      as: "users",
       foreignKey: "roleId",
     });
   }
@@ -29,6 +30,7 @@ class Role extends Model {
       tableName: ROLE_TABLE,
       modelName: "Role",
       timestamps: true,
+      underscored: true,
     };
   }
 }

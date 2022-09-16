@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
+import { CONSECUTIVE_TYPE_TABLE } from "./consecutiveType.model";
 
 const CONSECUTIVE_TABLE = "consecutives";
 
@@ -15,37 +16,40 @@ const ConsecutiveSchema = {
     unique: true,
   },
 
-  preString: {
-    type: DataTypes.STRING,
-  },
-
-  preZeros: {
-    type: DataTypes.INTEGER,
-  },
-
-  current: {
+  consecutiveTypeId: {
     allowNull: false,
     type: DataTypes.INTEGER,
-    default: 1,
-  },
-
-  posString: {
-    type: DataTypes.STRING,
-  },
-
-  posZeros: {
-    type: DataTypes.INTEGER,
-  },
-
-  multiplier: {
-    type: DataTypes.INTEGER,
+    references: {
+      model: CONSECUTIVE_TYPE_TABLE,
+      key: "id",
+    },
   },
 };
 
 class Consecutive extends Model {
   static associate(models) {
-    this.hasMany(models.ConsecutiveList, {
+    this.belongsTo(models.ConsecutiveType, {
+      as: "consecutiveType",
+    });
+    this.hasMany(models.Request, {
       foreignKey: "consecutiveId",
+      as: "requests",
+    });
+    this.hasMany(models.Quotation, {
+      foreignKey: "consecutiveId",
+      as: "quotations",
+    });
+    this.hasMany(models.Service, {
+      foreignKey: "consecutiveId",
+      as: "services",
+    });
+    this.hasMany(models.Project, {
+      foreignKey: "consecutiveId",
+      as: "projects",
+    });
+    this.hasMany(models.Invoice, {
+      foreignKey: "consecutiveId",
+      as: "invoices",
     });
   }
 
@@ -55,6 +59,7 @@ class Consecutive extends Model {
       tableName: CONSECUTIVE_TABLE,
       modelName: "Consecutive",
       timestamps: true,
+      underscored: true,
     };
   }
 }

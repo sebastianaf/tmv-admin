@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
+import { EMPLOYEE_TABLE } from "./employee.model";
 import { ROLE_TABLE } from "./role.model";
 
 const USER_TABLE = "users";
@@ -10,12 +11,7 @@ const UserSchema = {
     autoIncrement: true,
     type: DataTypes.INTEGER,
   },
-  name: {
-    allowNull: false,
-    type: DataTypes.STRING,
-    unique: true,
-  },
-
+  
   alias: {
     allowNull: false,
     type: DataTypes.STRING,
@@ -36,18 +32,40 @@ const UserSchema = {
     },
   },
 
-  userId: {
-    allowNull: true,
+  createdById: {
+    allowNull: false,
     type: DataTypes.INTEGER,
     references: {
       model: USER_TABLE,
       key: "id",
     },
   },
+  employeeId: {
+    allowNull: true,
+    type: DataTypes.INTEGER,
+    references: {
+      model: EMPLOYEE_TABLE,
+      key: "id",
+    },
+  },
 };
 
 class User extends Model {
-  static associate() {}
+  static associate(models) {
+    this.hasMany(models.User, {
+      foreignKey: "createdById",
+      as: "created",
+    });
+    this.belongsTo(models.Role, {
+      as: "role",
+    });
+    this.belongsTo(models.User, {
+      as: "createdBy",
+    });
+    this.belongsTo(models.Employee, {
+      as: "employee",
+    });
+  }
 
   static config(sequelize) {
     return {
@@ -55,6 +73,7 @@ class User extends Model {
       tableName: USER_TABLE,
       modelName: "User",
       timestamps: true,
+      underscored: true,
     };
   }
 }

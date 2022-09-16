@@ -1,7 +1,12 @@
 import express from "express";
 
 import UserService from "../services/user.service";
-import { getIdUserSchema, getIdQueryUserSchema, postUserSchema, patchUserSchema } from "../schemas/user.schema";
+import {
+  getIdUserSchema,
+  getIdQueryUserSchema,
+  postUserSchema,
+  patchUserSchema,
+} from "../schemas/user.schema";
 import validatorHandler from "../middlewares/validator.handler";
 
 const router = express.Router();
@@ -18,8 +23,8 @@ router.get(
       } else {
         result = await service.find({});
       }
-      res.status(200).json({statusCode: 200, error:null,data:result});
-      next()
+      res.status(200).json({ statusCode: 200, error: null, data: result });
+      next();
     } catch (error) {
       next(error);
     }
@@ -32,7 +37,8 @@ router.post(
   async (req, res, next) => {
     try {
       const result = await service.create(req.body);
-      res.status(201).json(result);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
+      next();
     } catch (error) {
       next(error);
     }
@@ -46,7 +52,7 @@ router.patch(
   async (req, res, next) => {
     try {
       const result = await service.update(req.query._id, req.body);
-      res.status(200).json({statusCode: 200, error:null,data:result});
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);
@@ -60,7 +66,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const result = await service.delete(req.query._id);
-      res.status(200).json({statusCode: 200, error:null,data:result});
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);

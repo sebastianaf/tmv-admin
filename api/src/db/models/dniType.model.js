@@ -1,6 +1,6 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-const DNI_TYPE_TABLE = "dniTypes";
+const DNI_TYPE_TABLE = "dni_types";
 
 const DniTypeSchema = {
   id: {
@@ -13,12 +13,16 @@ const DniTypeSchema = {
   name: {
     allowNull: false,
     type: DataTypes.STRING,
+    unique: true,
   },
 };
 
 class DniType extends Model {
   static associate(models) {
-    this.hasMany(models.Person, {
+    this.hasMany(models.Employee, {
+      foreignKey: "dniTypeId",
+    });
+    this.hasMany(models.Client, {
       foreignKey: "dniTypeId",
     });
   }
@@ -29,6 +33,7 @@ class DniType extends Model {
       tableName: DNI_TYPE_TABLE,
       modelName: "DniType",
       timestamps: true,
+      underscored: true,
     };
   }
 }

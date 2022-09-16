@@ -1,13 +1,8 @@
 import Joi from "joi";
 
 const _id = Joi.number().integer();
-const name = Joi.string().min(3);
-const preString = Joi.string().min(1);
-const preZeros = Joi.number().integer().min(0);
-const current = Joi.number().integer().min(1);
-const posString = Joi.string().min(1);
-const posZeros = Joi.number().integer().min(0);
-const multiplier = Joi.number().integer().min(1);
+const consecutiveTypeId = Joi.number().integer().min(1);
+const name = Joi.string().min(2);
 
 const getIdConsecutiveSchema = Joi.object({
   _id: _id.required(),
@@ -18,18 +13,12 @@ const getIdQueryConsecutiveSchema = Joi.object({
 });
 
 const postConsecutiveSchema = Joi.object({
-  name: name.required(),
-  preString,
-  preZeros,
-  current: current.required(),
-  posString,
-  posZeros,
-  multiplier,
+  consecutiveTypeId: consecutiveTypeId.required(),
 });
 
 const patchConsecutiveSchema = Joi.object({
+  consecutiveTypeId,
   name,
-  current,
 });
 
 export {

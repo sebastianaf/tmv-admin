@@ -11,13 +11,33 @@ class UserService {
   constructor() {}
 
   async find(filter) {
-    let obj = await models.User.findAll(filter);
+    const obj = await models.User.findAll({
+      include: ["role", "employee"],
+      attributes: { exclude: ["password"] },
+    });
     return obj;
   }
 
   async findOne(id) {
-    const obj = await models.User.findByPk(id);
-    console.log(obj);
+    const obj = await models.User.findByPk(id, {
+      include: [
+        "role",
+        {
+          model: models.User,
+          foreignKey: "createdById",
+          as: "createdBy",
+          attributes: { exclude: ["password"] },
+        },
+        {
+          model: models.User,
+          foreignKey: "createdById",
+          as: "created",
+          attributes: { exclude: ["password"] },
+        },
+        "employee",
+      ],
+      attributes: { exclude: ["password"] },
+    });
     if (!obj) {
       throw boom.notFound(
         errorCodes.DB_NOT_FOUND.name,
@@ -55,8 +75,7 @@ class UserService {
     let firstUser = {
       alias: "admin",
       password: "admin",
-      userId: 1,
-      name: "Admin",
+      createdById: 1,
       roleId: 1,
     };
 
@@ -77,17 +96,14 @@ class UserService {
   }
 
   async create(data) {
-    const { alias, name, password, roleId, userId } = data;
+    const { password } = data;
     const salt = await bcryptjs.genSalt(10);
     const encryptedPassword = await bcryptjs.hash(password, salt);
-    const newUser = await models.User.create({
+    const obj = await models.User.create({
+      ...data,
       password: encryptedPassword,
-      alias,
-      userId,
-      name,
-      roleId,
     });
-    return newUser;
+    return obj;
   }
 }
 

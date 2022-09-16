@@ -1,4 +1,4 @@
-import express, { application } from "express";
+import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
@@ -6,7 +6,6 @@ import fs from "fs";
 import whitelist from "./config/whitelist";
 import { morganOptions } from "./config/morgan";
 import log from "./config/log";
-import sequelize from "./db/sequelize";
 import { toInteger } from "lodash";
 import { logCheck } from "./tools/log";
 import auth from "./middlewares/auth.handler";
@@ -63,23 +62,6 @@ toInteger(process.env.API_CREATE_ADMIN) === 1 &&
 /***
  * Routes
  */
-app.post("/db-01-check", async (req, res) => {
-  try {
-    //mongooseConn();
-  } catch (error) {
-    res.send(false);
-  }
-});
-
-app.post("/db-02-check", async (req, res) => {
-  try {
-    await sequelize.authenticate();
-    res.send(true);
-  } catch (error) {
-    res.send(false);
-  }
-});
-
 routerAPI(app);
 
 app.use(logErrors);

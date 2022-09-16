@@ -24,6 +24,7 @@ router.get(
         result = await service.find({});
       }
       res.status(200).json({ statusCode: 200, error: null, data: result });
+      next();
     } catch (error) {
       next(error);
     }

@@ -43,6 +43,38 @@ services:
     networks:
       - tmv-admin
 
+  tmv-admin-api-files:
+    container_name: tmv-admin-api-files
+    image: tmv-admin-api-files
+    restart: always
+    environment:
+      API_LOG: ${API_FILES_LOG}
+      API_PORT: ${API_FILES_PORT}
+      
+      #tmv-admin-api
+      API_CLIENT: ${API_CLIENT}
+      API_TOKEN: ${API_TOKEN}
+      API_TOKEN_EXPIRATION_TIME: ${API_TOKEN_EXPIRATION_TIME}
+      
+      #tmv-admin-db-01
+      DB_USERS_DATABASE: ${DB_USERS_DATABASE}
+      DB_USERS_USER: ${DB_USERS_USER}
+      DB_USERS_PASSWORD: ${DB_USERS_PASSWORD}
+      DB_USERS_HOST: ${DB_USERS_HOST}
+            
+      TZ: ${TZ}
+    build:
+      context: ./api-files
+      dockerfile: Dockerfile
+      args:
+        API_PORT: ${API_FILES_PORT}
+#    ports:
+#      - ${API_FILES_PORT}:${API_FILES_PORT}
+    depends_on:
+      - tmv-admin-db-01
+    networks:
+      - tmv-admin
+
   tmv-admin-db-01:
     container_name: tmv-admin-db-01
     image: mongo:4.4.15
