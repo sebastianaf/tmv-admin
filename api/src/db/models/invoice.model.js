@@ -28,6 +28,11 @@ const InvoiceSchema = {
     type: DataTypes.TEXT,
   },
 
+  value: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
+
   consecutiveId: {
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -85,6 +90,10 @@ const InvoiceSchema = {
 
 class Invoice extends Model {
   static associate(models) {
+    this.hasMany(models.InvoiceFile, {
+      foreignKey: "invoiceId",
+      as: "files",
+    });
     this.belongsTo(models.InvoiceType, {
       as: "invoiceType",
     });

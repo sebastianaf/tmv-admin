@@ -8,8 +8,6 @@ const responsableId = Joi.number().integer().min(1);
 const costValue = Joi.number().integer().min(10000);
 const saleValue = Joi.number().integer().min(10000);
 const notes = Joi.string().min(20);
-const authorizedById = Joi.number().integer().min(1);
-const authorizedAt = Joi.date();
 
 const getIdQueryQuotationSchema = Joi.object({
   _id,
@@ -37,9 +35,8 @@ const patchQuotationSchema = Joi.object({
   costValue,
   saleValue,
   notes,
-  authorizedById,
-  authorizedAt,
 });
+
 export {
   getIdQueryQuotationSchema,
   getIdQuotationSchema,

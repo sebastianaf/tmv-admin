@@ -10,7 +10,6 @@ const sequelize = new Sequelize(dbData.database, dbData.user, dbData.password, {
   logging: false,
   host: dbData.host,
   port: dbData.port,
-  timezone: "-05:00",
 });
 
 /**
@@ -22,7 +21,7 @@ console.log(`Setting up models... OK`);
 /**
  * Sync the models with the database
  */
-sequelize.sync({ force: true });
+sequelize.sync({ force: false });
 console.log(`Syncing models... OK`);
 
 export default sequelize;

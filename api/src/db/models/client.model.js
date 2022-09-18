@@ -31,6 +31,12 @@ const ClientSchema = {
     type: DataTypes.STRING,
     unique: true,
   },
+  
+  idSiigo: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    unique: true,
+  },
 
   dniTypeId: {
     allowNull: false,

@@ -8,6 +8,7 @@ const authorizedById = Joi.number().integer().min(1);
 const authorizedAt = Joi.date();
 const finishedAt = Joi.date();
 const createdById = Joi.number().integer().min(1);
+const value = Joi.number().integer().min(10000);
 
 const getIdQueryInvoiceSchema = Joi.object({
   _id,
@@ -22,17 +23,22 @@ const postInvoiceSchema = Joi.object({
   notes: notes.required(),
   responsableId: responsableId.required(),
   createdById: createdById.required(),
+  consecutiveId: _id.required(),
+  projectId: _id.required(),
+  value: value.required(),
 });
 
 const patchInvoiceSchema = Joi.object({
   invoiceTypeId,
   notes,
   responsableId,
-  authorizedById,
-  authorizedAt,
-  finishedAt,
   createdById,
+  finishedAt,
+  consecutiveId: _id,
+  projectId: _id,
+  value,
 });
+
 export {
   getIdQueryInvoiceSchema,
   getIdInvoiceSchema,

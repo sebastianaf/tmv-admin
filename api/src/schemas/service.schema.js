@@ -19,6 +19,10 @@ const postServiceSchema = Joi.object({
   quotationId: _id,
   responsableId: _id.required(),
   createdById: _id.required(),
+  projectId: _id.required(),
+  requestId: _id,
+  startAt: date.required(),
+  durationHours: _id.required(),
 });
 
 const patchServiceSchema = Joi.object({
@@ -27,11 +31,14 @@ const patchServiceSchema = Joi.object({
   consecutiveId: _id,
   quotationId: _id,
   responsableId: _id,
-  authorizedById: _id,
-  authorizedAt: date,
   finishedAt: date,
   createdById: _id,
+  projectId: _id,
+  requestId: _id,
+  startAt: date,
+  durationHours: _id,
 });
+
 export {
   getIdQueryServiceSchema,
   getIdServiceSchema,

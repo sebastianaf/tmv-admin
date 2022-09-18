@@ -21,7 +21,7 @@ const getIdRequestSchema = Joi.object({
 
 const postRequestSchema = Joi.object({
   requestTypeId: requestTypeId.required(),
-  quotationId: quotationId.required(),
+  quotationId,
   consecutiveId: consecutiveId.required(),
   createdById: createdById.required(),
   clientContactId: clientContact.required(),

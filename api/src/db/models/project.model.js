@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
+import { CLIENT_CONTACT_TABLE } from "./clientContact.model";
 import { CONSECUTIVE_TABLE } from "./consecutive.model";
 import { EMPLOYEE_TABLE } from "./employee.model";
 import { PROJECT_TYPE_TABLE } from "./projectType.model";
@@ -25,6 +26,20 @@ const ProjectSchema = {
   notes: {
     allowNull: false,
     type: DataTypes.TEXT,
+  },
+
+  place: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+
+  clientContactId: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    references: {
+      model: CLIENT_CONTACT_TABLE,
+      key: "id",
+    },
   },
 
   consecutiveId: {
@@ -80,6 +95,10 @@ class Project extends Model {
       foreignKey: "projectId",
       as: "services",
     });
+    this.hasMany(models.ProjectFile, {
+      foreignKey: "projectId",
+      as: "files",
+    });
     this.hasOne(models.Invoice, {
       foreignKey: "projectId",
       as: "invoice",
@@ -98,6 +117,9 @@ class Project extends Model {
     });
     this.belongsTo(models.Consecutive, {
       as: "consecutive",
+    });
+    this.belongsTo(models.ClientContact, {
+      as: "clientContact",
     });
   }
 

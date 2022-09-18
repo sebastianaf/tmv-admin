@@ -55,6 +55,14 @@ class QuotationService {
     await obj.destroy();
     return null;
   }
+
+  async authorizate(id, employeeId) {
+    const obj = await this.update(id, {
+      authorizedById: employeeId,
+      authorizedAt: Date.now(),
+    });
+    return obj;
+  }
 }
 
 export default QuotationService;

@@ -57,6 +57,10 @@ class ClientContact extends Model {
       foreignKey: "clientContactId",
       as: "requests",
     });
+    this.hasMany(models.Project, {
+      foreignKey: "clientContactId",
+      as: "projects",
+    });
   }
 
   static config(sequelize) {

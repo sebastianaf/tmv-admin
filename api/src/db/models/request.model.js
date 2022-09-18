@@ -4,7 +4,6 @@ import { EMPLOYEE_TABLE } from "./employee.model";
 import { CLIENT_CONTACT_TABLE } from "./clientContact.model";
 import { CONSECUTIVE_TABLE } from "./consecutive.model";
 import { QUOTATION_TABLE } from "./quotation.model";
-import { SERVICE_TABLE } from "./service.model";
 
 const REQUEST_TABLE = "requests";
 
@@ -62,15 +61,6 @@ const RequestSchema = {
     },
   },
 
-  serviceId: {
-    allowNull: true,
-    type: DataTypes.INTEGER,
-    references: {
-      model: SERVICE_TABLE,
-      key: "id",
-    },
-  },
-
   createdById: {
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -97,9 +87,13 @@ const RequestSchema = {
 
 class Request extends Model {
   static associate(models) {
-    this.hasMany(models.RequestFile,{
+    this.hasMany(models.RequestFile, {
       foreignKey: "requestId",
-      as: "files"
+      as: "files",
+    });
+    this.hasOne(models.Service, {
+      foreignKey: "requestId",
+      as: "service",
     });
     this.belongsTo(models.Consecutive, {
       as: "consecutive",
@@ -118,9 +112,6 @@ class Request extends Model {
     });
     this.belongsTo(models.Quotation, {
       as: "quotation",
-    });
-    this.belongsTo(models.Service, {
-      as: "service",
     });
   }
 

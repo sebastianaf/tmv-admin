@@ -20,6 +20,7 @@ class RequestService {
           include: ["client"],
           as: "clientContact",
         },
+        "service",
       ],
     });
     return obj;
@@ -38,6 +39,7 @@ class RequestService {
           include: ["client"],
           as: "clientContact",
         },
+        "service",
       ],
     });
     if (!obj) {

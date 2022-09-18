@@ -9,14 +9,14 @@ class ClientContactService {
 
   async find(filter) {
     let obj = await models.ClientContact.findAll({
-      include: ["client"],
+      include: ["client", "requests", "projects"],
     });
     return obj;
   }
 
   async findOne(id) {
     const obj = await models.ClientContact.findByPk(id, {
-      include: ["client"],
+      include: ["client", "requests", "projects"],
     });
     if (!obj) {
       throw boom.notFound(

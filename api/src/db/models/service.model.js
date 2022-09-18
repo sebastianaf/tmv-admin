@@ -3,6 +3,7 @@ import { CONSECUTIVE_TABLE } from "./consecutive.model";
 import { EMPLOYEE_TABLE } from "./employee.model";
 import { PROJECT_TABLE } from "./project.model";
 import { QUOTATION_TABLE } from "./quotation.model";
+import { REQUEST_TABLE } from "./request.model";
 import { SERVICE_TYPE_TABLE } from "./serviceType.model";
 
 const SERVICE_TABLE = "services";
@@ -29,6 +30,25 @@ const ServiceSchema = {
     type: DataTypes.TEXT,
   },
 
+  startAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+  },
+
+  durationHours: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
+
+  requestId: {
+    allowNull: true,
+    type: DataTypes.INTEGER,
+    references: {
+      model: REQUEST_TABLE,
+      key: "id",
+    },
+  },
+
   consecutiveId: {
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -46,7 +66,7 @@ const ServiceSchema = {
       key: "id",
     },
   },
-  
+
   projectId: {
     allowNull: false,
     type: DataTypes.INTEGER,
@@ -96,14 +116,6 @@ const ServiceSchema = {
 
 class Service extends Model {
   static associate(models) {
-    this.hasOne(models.Request, {
-      foreignKey: "serviceId",
-      as: "request",
-    });
-    this.hasOne(models.Invoice, {
-      foreignKey: "serviceId",
-      as: "invoice",
-    });
     this.hasMany(models.ServiceFile, {
       foreignKey: "serviceId",
       as: "files",
@@ -128,6 +140,9 @@ class Service extends Model {
     });
     this.belongsTo(models.Consecutive, {
       as: "consecutive",
+    });
+    this.belongsTo(models.Request, {
+      as: "request",
     });
   }
 

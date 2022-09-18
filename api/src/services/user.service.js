@@ -103,6 +103,7 @@ class UserService {
       ...data,
       password: encryptedPassword,
     });
+    obj.password = undefined;
     return obj;
   }
 }

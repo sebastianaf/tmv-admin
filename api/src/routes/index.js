@@ -21,15 +21,19 @@ import clientContactRouter from "./clientContact.router";
 import clientRouter from "./client.router";
 import quotationTypeRouter from "./quotationType.router";
 import quotationFileRouter from "./quotationFile.router";
+import quotationAuthorizeRouter from "./quotationAuthorizate.router";
 import quotationRouter from "./quotation.router";
 import serviceTypeRouter from "./serviceType.router";
 import serviceFileRouter from "./serviceFile.router";
+import serviceAuthorizeRouter from "./serviceAuthorize.router";
 import serviceRouter from "./service.router";
 import projectTypeRouter from "./projectType.router";
 import projectFileRouter from "./projectFile.router";
+import projectAuthorizeRouter from "./projectAuthorize.router";
 import projectRouter from "./project.router";
 import invoiceTypeRouter from "./invoiceType.router";
 import invoiceFileRouter from "./invoiceFile.router";
+import invoiceAuthorizeRouter from "./invoiceAuthorize.router";
 import invoiceRouter from "./invoice.router";
 
 const routerAPI = (app) => {
@@ -44,29 +48,41 @@ const routerAPI = (app) => {
   router.use("/access", accessRouter);
   router.use("/login", loginRouter);
   router.use("/email", emailRouter);
-  router.use("/consecutiveType", consecutiveTypeRouter);
-  router.use("/consecutive", consecutiveRouter);
   router.use("/dniType", dniTypeRouter);
-  router.use("/employeeType", employeeTypeRouter);
+
+  router.use("/consecutive", consecutiveRouter);
+  consecutiveRouter.use("/type", consecutiveTypeRouter);
+
   router.use("/employee", employeeRouter);
-  router.use("/clientType", clientTypeRouter);
-  router.use("/clientContact", clientContactRouter);
+  employeeRouter.use("/type", employeeTypeRouter);
+
   router.use("/client", clientRouter);
-  router.use("/requestType", requestTypeRouter);
-  router.use("/requestFile", requestFileRouter);
+  clientRouter.use("/type", clientTypeRouter);
+  clientRouter.use("/contact", clientContactRouter);
+
   router.use("/request", requestRouter);
-  router.use("/quotationType", quotationTypeRouter);
-  router.use("/quotationFile", quotationFileRouter);
+  requestRouter.use("/type", requestTypeRouter);
+  requestRouter.use("/file", requestFileRouter);
+
   router.use("/quotation", quotationRouter);
-  router.use("/serviceType", serviceTypeRouter);
-  router.use("/serviceFile", serviceFileRouter);
+  quotationRouter.use("/type", quotationTypeRouter);
+  quotationRouter.use("/file", quotationFileRouter);
+  quotationRouter.use("/authorize", quotationAuthorizeRouter);
+
   router.use("/service", serviceRouter);
-  router.use("/projectType", projectTypeRouter);
-  router.use("/projectFile", projectFileRouter);
+  serviceRouter.use("/type", serviceTypeRouter);
+  serviceRouter.use("/file", serviceFileRouter);
+  serviceRouter.use("/authorize", serviceAuthorizeRouter);
+
   router.use("/project", projectRouter);
-  router.use("/invoiceType", invoiceTypeRouter);
-  router.use("/invoiceFile", invoiceFileRouter);
+  projectRouter.use("/type", projectTypeRouter);
+  projectRouter.use("/file", projectFileRouter);
+  projectRouter.use("/authorize", projectAuthorizeRouter);
+
   router.use("/invoice", invoiceRouter);
+  invoiceRouter.use("/type", invoiceTypeRouter);
+  invoiceRouter.use("/file", invoiceFileRouter);
+  invoiceRouter.use("/authorize", invoiceAuthorizeRouter);
 };
 
 export default routerAPI;

@@ -2,10 +2,8 @@ import Joi from "joi";
 
 const _id = Joi.number().integer().min(1);
 const projectTypeId = Joi.number().integer().min(1);
-const notes = Joi.string().min(20);
+const notes = Joi.string().min(2);
 const responsableId = Joi.number().integer().min(1);
-const authorizedById = Joi.number().integer().min(1);
-const authorizedAt = Joi.date();
 const finishedAt = Joi.date();
 const createdById = Joi.number().integer().min(1);
 
@@ -22,17 +20,22 @@ const postProjectSchema = Joi.object({
   notes: notes.required(),
   responsableId: responsableId.required(),
   createdById: createdById.required(),
+  consecutiveId: _id.required(),
+  clientContacId: _id.required(),
+  place: notes.required(),
 });
 
 const patchProjectSchema = Joi.object({
   projectTypeId,
   notes,
   responsableId,
-  authorizedById,
-  authorizedAt,
   finishedAt,
   createdById,
+  consecutiveId: _id,
+  clientContacId: _id,
+  place: notes,
 });
+
 export {
   getIdQueryProjectSchema,
   getIdProjectSchema,

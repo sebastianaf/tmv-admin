@@ -11,14 +11,28 @@ class ConsecutiveService {
 
   async find(filter) {
     let obj = await models.Consecutive.findAll({
-      include: ["consecutiveType", "resquests", "quotations", "services"],
+      include: [
+        "consecutiveType",
+        "requests",
+        "quotations",
+        "services",
+        "projects",
+        "invoices",
+      ],
     });
     return obj;
   }
 
   async findOne(id) {
     const obj = await models.Consecutive.findByPk(id, {
-      include: ["consecutiveType", "resquests", "quotations", "services"],
+      include: [
+        "consecutiveType",
+        "requests",
+        "quotations",
+        "services",
+        "projects",
+        "invoices",
+      ],
     });
     if (!obj) {
       throw boom.notFound(

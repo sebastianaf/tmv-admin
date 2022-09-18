@@ -19,6 +19,7 @@ const getIdClientSchema = Joi.object({
 
 const postClientSchema = Joi.object({
   clientTypeId: clientTypeId.required(),
+  idSiigo: name.required(),
   name: name.required(),
   dni: dni.required(),
   dniTypeId: dniTypeId.required(),
@@ -27,6 +28,7 @@ const postClientSchema = Joi.object({
 
 const patchClientSchema = Joi.object({
   clientTypeId,
+  idSiigo: name,
   name,
   dni,
   dniTypeId,
