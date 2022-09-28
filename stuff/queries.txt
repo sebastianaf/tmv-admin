@@ -1,0 +1,10 @@
+SELECT * FROM public.users ORDER BY id ASC
+SELECT * FROM public.people ORDER BY id ASC
+SELECT * FROM public.employees ORDER BY id ASC
+SELECT * FROM public.consecutives ORDER BY id ASC
+SELECT * FROM public.clients ORDER BY id ASC
+SELECT * FROM public.roles ORDER BY id ASC
+SELECT * FROM public.requests ORDER BY id ASC
+SELECT * FROM public.services ORDER BY id ASC
+SELECT * FROM public.quotations ORDER BY id ASC
+SELECT * FROM public.quotations ORDER BY id ASC
